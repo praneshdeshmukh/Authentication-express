@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
-const JWT= require('jsonwebtoken')
+const JWT= require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 
 const userSchema = new Schema({
@@ -26,7 +27,9 @@ const userSchema = new Schema({
   forgotPasswordToken : {
     type: String
   },
-  
+  forgotPasswordExpiryDate: {
+    type: Date
+  },
 }, {
     timestamps : true
 })
@@ -45,7 +48,9 @@ userSchema.methods = {
             email: this.email,
         },
         process.env.SECRET,
-       )
+        {
+            expiresIn: '24h',
+        })
     }
 }
 const userModel = mongoose.model('user', userSchema);
